@@ -119,5 +119,38 @@
     "stop_on_waf_detection": true,
     "avoid_destructive_payloads": true,
     "respect_robots_txt": true
+  },
+  "advanced_techniques": {
+    "waf_bypass": {
+      "user_agents": [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36",
+        "GoogleBot/2.1 (+http://www.google.com/bot.html)",
+        "facebookexternalhit/1.1"
+      ],
+      "encoding_techniques": [
+        "url_encode",
+        "double_url_encode", 
+        "unicode_encode",
+        "html_entity_encode",
+        "base64_encode"
+      ],
+      "case_variation": true,
+      "comment_insertion": true,
+      "payload_fragmentation": true
+    },
+    "rate_limiting": {
+      "delays": [1, 2, 3, 5],
+      "random_delay": true,
+      "concurrent_requests": 3,
+      "proxy_rotation": false
+    },
+    "evasion": {
+      "http_parameter_pollution": true,
+      "verb_tampering": ["GET", "POST", "PUT", "PATCH"],
+      "header_manipulation": true,
+      "payload_encoding": true
+    }
   }
 }

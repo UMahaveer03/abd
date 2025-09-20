@@ -29,20 +29,62 @@ ABD (Automated Bug Discovery) is a professional-grade security testing framework
 - SSL/TLS certificate analysis
 
 ### 🔍 **Stage 3: Vulnerability Identification**
-- Web vulnerability scanning (XSS, SQLi, LFI, Directory Traversal)
-- SSL/TLS vulnerability assessment
-- Service-specific vulnerability checks
-- Security misconfiguration detection
-- Sensitive file exposure testing
-- Security header analysis
+- **OWASP Top 10 2021 Coverage:**
+  - A01: Broken Access Control (IDOR, privilege escalation)
+  - A02: Cryptographic Failures (SSL/TLS vulnerabilities)
+  - A03: Injection (SQL, NoSQL, XSS, XXE, LDAP, SSTI)
+  - A04: Insecure Design (business logic flaws)
+  - A05: Security Misconfiguration (headers, CORS, files)
+  - A06: Vulnerable Components (service versions)
+  - A07: Authentication Failures (JWT flaws, bypasses)
+  - A08: Software/Data Integrity Failures (XXE, deserialization)
+  - A09: Security Logging Failures (monitoring gaps)
+  - A10: Server-Side Request Forgery (SSRF)
+- **Advanced Vulnerability Detection:**
+  - Cross-Site Scripting (XSS) - Reflected, DOM-based
+  - SQL Injection with WAF bypass techniques
+  - NoSQL Injection (MongoDB, CouchDB)
+  - XML External Entity (XXE) attacks
+  - Server-Side Template Injection (SSTI)
+  - LDAP Injection vulnerabilities
+  - Cross-Site Request Forgery (CSRF)
+  - HTTP Parameter Pollution (HPP)
+  - Host Header Injection
+  - CORS Misconfigurations
+  - JWT Vulnerabilities (none algorithm, weak secrets)
+  - Authentication Bypass techniques
+  - File Upload vulnerabilities
+  - Subdomain Takeover detection
+  - Business Logic Flaws
+- **Advanced Evasion Techniques:**
+  - WAF bypass with payload encoding
+  - User-Agent rotation
+  - Rate limiting evasion
+  - Case variation and comment insertion
+  - HTTP verb tampering
+  - Header manipulation
 
 ### 💥 **Stage 4: Exploitation**
-- Safe proof-of-concept development
-- Automated exploitation attempts
-- Risk assessment and prioritization
-- Comprehensive reporting (JSON, HTML, Executive Summary)
-- Security recommendations
-- Remediation guidance
+- **Advanced Proof-of-Concept Development:**
+  - OWASP Top 10 2021 exploit demonstrations
+  - Safe exploitation with bypass techniques
+  - JWT manipulation and forgery
+  - Authentication bypass demonstrations
+  - Business logic abuse scenarios
+  - SSRF and XXE exploitation
+  - Template injection payloads
+- **Comprehensive Reporting:**
+  - Risk assessment and CVSS scoring
+  - Executive summary reports
+  - Technical vulnerability reports
+  - Remediation guidelines
+  - Proof-of-concept documentation
+  - Security recommendations
+- **Advanced Features:**
+  - WAF evasion techniques
+  - Rate limiting bypass
+  - Multi-vector attack chains
+  - Custom payload generation
 
 ## Installation
 
@@ -111,8 +153,33 @@ ABD uses a JSON configuration file (`config.json`) for customization:
   "payloads": {
     "xss": ["<script>alert('ABD-XSS-Test')</script>"],
     "sqli": ["'", "' OR '1'='1"],
+    "nosqli": ["true, $where: '1 == 1'", "$ne: null"],
     "lfi": ["../../../etc/passwd"],
+    "xxe": ["<?xml version=\"1.0\"?><!DOCTYPE root [<!ENTITY xxe SYSTEM 'file:///etc/passwd'>]><root>&xxe;</root>"],
+    "ssrf": ["http://127.0.0.1:22", "http://169.254.169.254/latest/meta-data/"],
+    "ssti": ["{{7*7}}", "${7*7}", "<%=7*7%>"],
+    "ldap": ["*", "*)(&", "*)(uid=*"],
     "rce": ["id", "whoami"]
+  },
+  "advanced_techniques": {
+    "waf_bypass": {
+      "user_agents": ["GoogleBot/2.1", "facebookexternalhit/1.1"],
+      "encoding_techniques": ["url_encode", "double_url_encode", "unicode_encode"],
+      "case_variation": true,
+      "comment_insertion": true,
+      "payload_fragmentation": true
+    },
+    "rate_limiting": {
+      "delays": [1, 2, 3, 5],
+      "random_delay": true,
+      "concurrent_requests": 3
+    },
+    "evasion": {
+      "http_parameter_pollution": true,
+      "verb_tampering": ["GET", "POST", "PUT", "PATCH"],
+      "header_manipulation": true,
+      "payload_encoding": true
+    }
   }
 }
 ```
@@ -139,6 +206,64 @@ output/
 4. **Assessment Scope** - Documented scope and limitations
 
 ## Security Features
+
+### OWASP Top 10 2021 Coverage
+ABD provides comprehensive coverage of the latest OWASP Top 10 vulnerabilities:
+
+1. **A01:2021 – Broken Access Control**
+   - Insecure Direct Object References (IDOR)
+   - Authentication bypass techniques
+   - Privilege escalation testing
+
+2. **A02:2021 – Cryptographic Failures**
+   - SSL/TLS vulnerability assessment
+   - Weak encryption detection
+   - Certificate validation issues
+
+3. **A03:2021 – Injection**
+   - SQL injection with WAF bypass
+   - NoSQL injection (MongoDB, CouchDB)
+   - LDAP injection
+   - XSS (Reflected, DOM-based)
+   - XXE (XML External Entity)
+   - SSTI (Server-Side Template Injection)
+
+4. **A04:2021 – Insecure Design**
+   - Business logic flaw detection
+   - Workflow bypass testing
+
+5. **A05:2021 – Security Misconfiguration**
+   - Missing security headers
+   - CORS misconfigurations
+   - Directory listing
+   - Sensitive file exposure
+
+6. **A06:2021 – Vulnerable and Outdated Components**
+   - Service version detection
+   - Known vulnerability identification
+
+7. **A07:2021 – Identification and Authentication Failures**
+   - JWT vulnerability testing
+   - Authentication bypass
+   - Session management flaws
+
+8. **A08:2021 – Software and Data Integrity Failures**
+   - XXE attack vectors
+   - Insecure deserialization detection
+
+9. **A09:2021 – Security Logging and Monitoring Failures**
+   - Security header analysis
+   - Monitoring gap identification
+
+10. **A10:2021 – Server-Side Request Forgery (SSRF)**
+    - Internal network access
+    - Cloud metadata exposure
+    - Port scanning via SSRF
+
+### Advanced Evasion Techniques
+- **WAF Bypass:** Payload encoding, case variation, comment insertion
+- **Rate Limiting Evasion:** Random delays, user agent rotation
+- **Detection Evasion:** HTTP verb tampering, header manipulation
 
 ### Safety Measures
 - Non-destructive testing only
@@ -258,14 +383,32 @@ This tool is for educational and authorized security testing purposes only. User
 
 ## Roadmap
 
-### Upcoming Features
+### Recently Added (v2.0) ✅
+- [x] Complete OWASP Top 10 2021 vulnerability coverage
+- [x] Advanced WAF bypass techniques
+- [x] JWT vulnerability testing
+- [x] NoSQL injection detection
+- [x] SSRF (Server-Side Request Forgery) testing
+- [x] XXE (XML External Entity) attack detection
+- [x] SSTI (Server-Side Template Injection) testing
+- [x] Business logic flaw detection
+- [x] Advanced authentication bypass techniques
+- [x] HTTP Parameter Pollution testing
+- [x] CORS misconfiguration detection
+- [x] Host header injection testing
+- [x] Subdomain takeover detection
+
+### Upcoming Features (v3.0)
 - [ ] Cloud security assessments (AWS, Azure, GCP)
-- [ ] API security testing framework
+- [ ] API security testing framework with GraphQL support
 - [ ] Machine learning-based vulnerability detection
 - [ ] Integration with popular CI/CD pipelines
 - [ ] Mobile application security testing
-- [ ] Advanced evasion techniques
-- [ ] Custom payload development framework
+- [ ] Advanced payload generation with genetic algorithms
+- [ ] Blockchain and smart contract security testing
+- [ ] Container and Kubernetes security assessment
+- [ ] Real-time threat intelligence integration
+- [ ] Automated exploit chaining
 
 ---
 
