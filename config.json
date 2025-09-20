@@ -1,0 +1,53 @@
+{
+  "output_dir": "output",
+  "timeout": 30,
+  "threads": 10,
+  "user_agent": "ABD/1.0 Security Scanner",
+  "subdomain_wordlist": "wordlists/subdomains.txt",
+  "ports": [80, 443, 8080, 8443, 3000, 5000, 8000, 9000],
+  "vulnerable_ports": [21, 22, 23, 25, 53, 80, 110, 135, 139, 143, 443, 993, 995, 1433, 3306, 3389, 5432, 5985, 5986],
+  "payloads": {
+    "xss": [
+      "<script>alert('ABD-XSS-Test')</script>",
+      "\"><script>alert('ABD-XSS-Test')</script>",
+      "';alert('ABD-XSS-Test');//",
+      "<img src=x onerror=alert('ABD-XSS-Test')>",
+      "<svg onload=alert('ABD-XSS-Test')>"
+    ],
+    "sqli": [
+      "'",
+      "' OR '1'='1",
+      "' UNION SELECT NULL--",
+      "'; DROP TABLE users--",
+      "1' AND (SELECT COUNT(*) FROM information_schema.tables)>0--",
+      "1 UNION SELECT @@version--"
+    ],
+    "lfi": [
+      "../../../etc/passwd",
+      "..\\..\\..\\windows\\system32\\drivers\\etc\\hosts",
+      "../../../../etc/shadow",
+      "..\\..\\..\\boot.ini",
+      "/etc/passwd",
+      "C:\\windows\\system32\\drivers\\etc\\hosts"
+    ],
+    "rce": [
+      "id",
+      "whoami",
+      "cat /etc/passwd",
+      "dir",
+      "ping -c 1 127.0.0.1"
+    ]
+  },
+  "reporting": {
+    "generate_html": true,
+    "generate_json": true,
+    "generate_executive_summary": true,
+    "include_screenshots": false
+  },
+  "safety": {
+    "max_requests_per_minute": 60,
+    "stop_on_waf_detection": true,
+    "avoid_destructive_payloads": true,
+    "respect_robots_txt": true
+  }
+}
